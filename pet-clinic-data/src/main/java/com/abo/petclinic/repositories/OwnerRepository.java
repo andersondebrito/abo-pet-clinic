@@ -1,0 +1,9 @@
+package com.abo.petclinic.repositories;
+
+import com.abo.petclinic.model.Owner;
+import org.springframework.data.repository.CrudRepository;
+
+public interface OwnerRepository extends CrudRepository<Owner, Long> {
+
+
+}
