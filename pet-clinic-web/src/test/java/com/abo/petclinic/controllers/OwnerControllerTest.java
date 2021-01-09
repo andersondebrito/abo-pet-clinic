@@ -59,16 +59,6 @@ class OwnerControllerTest {
     }
 
     @Test
-    void displayOwner() throws Exception {
-        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1l).build());
-
-        mockMvc.perform(get("/owners/123"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("owners/ownerDetails"))
-                .andExpect(model().attribute("owner", hasProperty("id", is(1l))));
-    }
-
-    @Test
     void processFindFormReturnMany() throws Exception {
         when(ownerService.findAllByLastNameLike(anyString()))
                 .thenReturn(Arrays.asList(Owner.builder().id(1l).build(),
@@ -103,20 +93,19 @@ class OwnerControllerTest {
     }
 
     @Test
-    void initCreationForm() throws Exception {
-        mockMvc.perform(get("/owners/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("owners/createOrUpdateOwnerForm"))
-                .andExpect(model().attributeExists("owner"));
-
-        verifyZeroInteractions(ownerService);
-    }
-
-    @Test
-    void initUpdateOwnerForm() throws Exception {
+    void displayOwner() throws Exception {
         when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1l).build());
 
-        mockMvc.perform(get("/owners/1/edit"))
+        mockMvc.perform(get("/owners/123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownerDetails"))
+                .andExpect(model().attribute("owner", hasProperty("id", is(1l))));
+    }
+
+
+    @Test
+    void initCreationForm() throws Exception {
+        mockMvc.perform(get("/owners/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("owners/createOrUpdateOwnerForm"))
                 .andExpect(model().attributeExists("owner"));
@@ -137,6 +126,18 @@ class OwnerControllerTest {
     }
 
     @Test
+    void initUpdateOwnerForm() throws Exception {
+        when(ownerService.findById(anyLong())).thenReturn(Owner.builder().id(1l).build());
+
+        mockMvc.perform(get("/owners/1/edit"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/createOrUpdateOwnerForm"))
+                .andExpect(model().attributeExists("owner"));
+
+        verifyZeroInteractions(ownerService);
+    }
+
+    @Test
     void processUpdateOwnerForm() throws Exception {
         when(ownerService.save(ArgumentMatchers.any())).thenReturn(Owner.builder().id(1l).build());
 
@@ -147,6 +148,5 @@ class OwnerControllerTest {
 
         verify(ownerService).save(ArgumentMatchers.any());
     }
-
 
 }
